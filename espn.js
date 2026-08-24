@@ -44,20 +44,17 @@ function upsertTeams(teamsPayload) {
       const owner =
         (t.owners || []).map((oid) => ownersById.get(oid)).filter(Boolean)[0] ||
         null;
-      // ESPN has two ways a team's display name can show up:
-      //  - `name`: the actual custom name a manager typed in (e.g. "Big Game Moves")
-      //  - `location` + `nickname`: an older split-name format. When a manager
-      //    hasn't customized these, ESPN silently fills them with the manager's
-      //    own first/last name, which is why unedited teams can show up looking
-      //    like a person's name instead of a team name.
-      // Prefer the real custom name first, and only fall back to the legacy
-      // location/nickname combo (then abbreviation) if no custom name exists.
+      // Prefer the real custom name first, then the legacy location/nickname
+      // combo. If neither exists, fall back to the owner's name rather than
+      // the cryptic team abbreviation (e.g. "GHST") — "Alex's Team" is more
+      // useful to a visitor than a 3-4 letter code.
       const customName = (t.name || "").trim();
       const legacyName = [t.location, t.nickname].filter(Boolean).join(" ").trim();
+      const ownerFallback = owner ? `${owner}'s Team` : null;
 
       upsert.run({
         id: t.id,
-        name: customName || legacyName || t.abbrev || `Team ${t.id}`,
+        name: customName || legacyName || ownerFallback || t.abbrev || `Team ${t.id}`,
         abbrev: t.abbrev || null,
         owner,
         logo: t.logo || null,
