@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('partials/head', { pageTitle: article.title }) %>
+</head>
+<body>
+<%- include('partials/nav') %>
+
+<main class="wrap">
+  <p class="helper-text" style="margin-top:24px;"><a href="/articles">← All articles</a></p>
+
+  <div class="article-header">
+    <div class="article-kind"><%= article.kind %></div>
+    <h1><%= article.title %></h1>
+    <div class="article-header__meta">
+      <% if (article.author) { %><%= article.author %> · <% } %>
+      <%= new Date(article.published_at).toLocaleDateString([], { month: 'long', day: 'numeric', year: 'numeric' }) %>
+    </div>
+  </div>
+
+  <div class="article-body">
+    <% article.body.split(/\n\s*\n/).forEach(function(para) { %>
+      <p><%= para %></p>
+    <% }); %>
+  </div>
+</main>
+
+<%- include('partials/footer') %>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('partials/head', { pageTitle: 'Articles' }) %>
+</head>
+<body>
+<%- include('partials/nav') %>
+
+<main class="wrap">
+  <div class="week-banner"><h1>Articles</h1></div>
+
+  <% if (!articles.length) { %>
+    <div class="empty-state">Nothing published yet.</div>
+  <% } else { %>
+    <div class="article-list">
+      <% articles.forEach(function(a) { %>
+        <a class="article-row" href="/articles/<%= a.slug %>">
+          <div class="article-kind"><%= a.kind %></div>
+          <div class="article-row__title"><%= a.title %></div>
+          <div class="article-row__meta">
+            <% if (a.author) { %><%= a.author %> · <% } %>
+            <%= new Date(a.published_at).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' }) %>
+          </div>
+        </a>
+      <% }); %>
+    </div>
+  <% } %>
+</main>
+
+<%- include('partials/footer') %>
+</body>
+</html>

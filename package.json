@@ -1,0 +1,21 @@
+{
+  "name": "fantasy-live",
+  "version": "1.0.0",
+  "description": "Public live-score site + admin roster/article manager for a private ESPN Fantasy Football league",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.3.0",
+    "cookie-session": "^2.1.0",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.21.0"
+  },
+  "engines": {
+    "node": "20.x"
+  }
+}

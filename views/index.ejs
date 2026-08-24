@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('partials/head', { pageTitle: 'Live Scores' }) %>
+</head>
+<body>
+<%- include('partials/nav') %>
+
+<main class="wrap">
+
+  <div class="banner-error" data-error-banner <% if (!error) { %>hidden<% } %>>
+    <% if (error) { %>Live scores are temporarily unavailable — showing last known scores.<% } %>
+  </div>
+
+  <div class="week-banner">
+    <h1><% if (week) { %>Week <%= week %><% } else { %>Scoreboard<% } %></h1>
+    <div class="live-status">
+      <span class="live-dot"></span>
+      Updated <span data-last-updated><%= lastUpdated ? new Date(lastUpdated).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '—' %></span>
+    </div>
+  </div>
+
+  <% if (!matchups || matchups.length === 0) { %>
+    <div class="empty-state">
+      No live matchups right now. Check back once the week's games are underway.
+    </div>
+  <% } else { %>
+    <div class="scoreboard">
+      <% matchups.forEach(function(m) { %>
+        <a class="matchup-card" href="/matchup/<%= m.home ? m.home.teamId : m.away.teamId %>">
+          <% if (m.away) { %>
+            <div class="matchup-side">
+              <div class="side-team">
+                <div class="side-team__name"><%= m.away.name %></div>
+                <% if (m.away.owner) { %><div class="side-team__owner"><%= m.away.owner %></div><% } %>
+              </div>
+              <div class="side-score" data-score-for="<%= m.away.teamId %>"><%= m.away.score.toFixed(1) %></div>
+            </div>
+          <% } %>
+          <% if (m.home) { %>
+            <div class="matchup-side">
+              <div class="side-team">
+                <div class="side-team__name"><%= m.home.name %></div>
+                <% if (m.home.owner) { %><div class="side-team__owner"><%= m.home.owner %></div><% } %>
+              </div>
+              <div class="side-score" data-score-for="<%= m.home.teamId %>"><%= m.home.score.toFixed(1) %></div>
+            </div>
+          <% } %>
+          <div class="matchup-meta">View rosters →</div>
+        </a>
+      <% }); %>
+    </div>
+  <% } %>
+
+  <% if (articles && articles.length) { %>
+  <div class="article-feed">
+    <h2>Latest</h2>
+    <div class="article-list">
+      <% articles.forEach(function(a) { %>
+        <a class="article-row" href="/articles/<%= a.slug %>">
+          <div class="article-kind"><%= a.kind %></div>
+          <div class="article-row__title"><%= a.title %></div>
+          <div class="article-row__meta">
+            <% if (a.author) { %><%= a.author %> · <% } %>
+            <%= new Date(a.published_at).toLocaleDateString([], { month: 'short', day: 'numeric' }) %>
+          </div>
+        </a>
+      <% }); %>
+    </div>
+  </div>
+  <% } %>
+
+</main>
+
+<%- include('partials/footer') %>
+<script src="/js/live.js"></script>
+</body>
+</html>

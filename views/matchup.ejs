@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('partials/head', { pageTitle: (matchup.away ? matchup.away.name : '') + ' vs ' + (matchup.home ? matchup.home.name : '') }) %>
+</head>
+<body>
+<%- include('partials/nav') %>
+
+<main class="wrap">
+  <p class="helper-text" style="margin-top:24px;"><a href="/">← Back to scoreboard</a></p>
+
+  <div class="matchup-header">
+    <div class="matchup-header__team">
+      <span class="side-team__name"><%= matchup.away ? matchup.away.name : 'TBD' %></span>
+      <span class="matchup-header__score" data-score-for="<%= matchup.away ? matchup.away.teamId : '' %>">
+        <%= matchup.away ? matchup.away.score.toFixed(1) : '0.0' %>
+      </span>
+    </div>
+    <div class="matchup-header__vs">Week <%= week %></div>
+    <div class="matchup-header__team">
+      <span class="side-team__name"><%= matchup.home ? matchup.home.name : 'TBD' %></span>
+      <span class="matchup-header__score" data-score-for="<%= matchup.home ? matchup.home.teamId : '' %>">
+        <%= matchup.home ? matchup.home.score.toFixed(1) : '0.0' %>
+      </span>
+    </div>
+  </div>
+
+  <div class="roster-columns">
+    <div>
+      <div class="section-title"><%= matchup.away ? matchup.away.name : 'Away' %></div>
+      <% if (!awayRoster.length) { %>
+        <div class="empty-state">No roster entered yet.</div>
+      <% } else { %>
+      <table class="roster-table">
+        <thead><tr><th>Slot</th><th>Player</th><th>Pos</th><th>NFL</th></tr></thead>
+        <tbody>
+          <% awayRoster.forEach(function(p) { %>
+            <tr class="<%= p.is_starter ? '' : 'bench-row' %>">
+              <td><span class="slot-tag"><%= p.slot || (p.is_starter ? p.position : 'BN') %></span></td>
+              <td><%= p.player_name %></td>
+              <td><%= p.position || '—' %></td>
+              <td><%= p.nfl_team || '—' %></td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+      <% } %>
+    </div>
+    <div>
+      <div class="section-title"><%= matchup.home ? matchup.home.name : 'Home' %></div>
+      <% if (!homeRoster.length) { %>
+        <div class="empty-state">No roster entered yet.</div>
+      <% } else { %>
+      <table class="roster-table">
+        <thead><tr><th>Slot</th><th>Player</th><th>Pos</th><th>NFL</th></tr></thead>
+        <tbody>
+          <% homeRoster.forEach(function(p) { %>
+            <tr class="<%= p.is_starter ? '' : 'bench-row' %>">
+              <td><span class="slot-tag"><%= p.slot || (p.is_starter ? p.position : 'BN') %></span></td>
+              <td><%= p.player_name %></td>
+              <td><%= p.position || '—' %></td>
+              <td><%= p.nfl_team || '—' %></td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+      <% } %>
+    </div>
+  </div>
+</main>
+
+<%- include('partials/footer') %>
+<script src="/js/live.js"></script>
+</body>
+</html>

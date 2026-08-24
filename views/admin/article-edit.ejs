@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title><%= article ? 'Edit Article' : 'New Article' %></title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+<div class="wrap admin-shell">
+  <div class="admin-topbar">
+    <h1><%= article && article.id ? 'Edit Article' : 'New Article' %></h1>
+    <a href="/admin" class="btn btn-secondary">← Back to admin</a>
+  </div>
+
+  <div class="card">
+    <% if (typeof error !== 'undefined' && error) { %><div class="form-error"><%= error %></div><% } %>
+    <form method="POST" action="<%= article && article.id ? '/admin/articles/' + article.id + '/edit' : '/admin/articles/new' %>">
+      <div class="form-row">
+        <label>Title</label>
+        <input type="text" name="title" value="<%= article ? article.title : '' %>" required />
+      </div>
+      <div class="form-row">
+        <label>Type</label>
+        <select name="kind">
+          <option value="article" <%= (!article || article.kind === 'article') ? 'selected' : '' %>>Article</option>
+          <option value="blurb" <%= (article && article.kind === 'blurb') ? 'selected' : '' %>>Blurb</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>Author</label>
+        <input type="text" name="author" value="<%= article && article.author ? article.author : '' %>" placeholder="Optional" />
+      </div>
+      <div class="form-row">
+        <label>Body (blank line = new paragraph)</label>
+        <textarea name="body" required><%= article ? article.body : '' %></textarea>
+      </div>
+      <div class="btn-row">
+        <label style="display:flex; align-items:center; gap:8px; text-transform:none; font-size:14px; color:var(--text);">
+          <input type="checkbox" name="publish" value="1" style="width:auto;" <%= (article && article.published_at) ? 'checked' : '' %> />
+          Published (visible on the public site)
+        </label>
+      </div>
+      <div class="btn-row" style="margin-top:20px;">
+        <button class="btn" type="submit">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
+</body>
+</html>

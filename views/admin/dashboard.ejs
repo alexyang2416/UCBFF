@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+<div class="wrap admin-shell">
+  <div class="admin-topbar">
+    <h1>Admin</h1>
+    <div class="btn-row">
+      <a href="/" class="btn btn-secondary">View site</a>
+      <form method="POST" action="/admin/logout"><button class="btn btn-secondary" type="submit">Log out</button></form>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="btn-row" style="justify-content: space-between;">
+      <div class="section-title" style="margin:0;">Teams &amp; Rosters</div>
+      <form method="POST" action="/admin/sync">
+        <button class="btn btn-secondary" type="submit">Sync teams from ESPN</button>
+      </form>
+    </div>
+    <p class="helper-text">Team names sync automatically from ESPN. Roster contents (who's playing) are entered manually below — click a team to edit its lineup.</p>
+    <% if (!teams.length) { %>
+      <div class="empty-state">No teams yet. Click "Sync teams from ESPN" once your league ID and cookies are set in .env.</div>
+    <% } else { %>
+    <table class="admin-table">
+      <thead><tr><th>Team</th><th>Owner</th><th></th></tr></thead>
+      <tbody>
+        <% teams.forEach(function(t) { %>
+          <tr>
+            <td><%= t.name %></td>
+            <td><%= t.owner || '—' %></td>
+            <td class="actions"><a class="btn btn-secondary" href="/admin/rosters/<%= t.id %>">Edit roster</a></td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+    <% } %>
+  </div>
+
+  <div class="card">
+    <div class="btn-row" style="justify-content: space-between;">
+      <div class="section-title" style="margin:0;">Articles &amp; Blurbs</div>
+      <a class="btn" href="/admin/articles/new">New article</a>
+    </div>
+    <% if (!articles.length) { %>
+      <div class="empty-state">Nothing written yet.</div>
+    <% } else { %>
+    <table class="admin-table">
+      <thead><tr><th>Title</th><th>Kind</th><th>Status</th><th></th></tr></thead>
+      <tbody>
+        <% articles.forEach(function(a) { %>
+          <tr>
+            <td><%= a.title %></td>
+            <td><%= a.kind %></td>
+            <td>
+              <% if (a.published_at) { %><span class="badge badge-live">Published</span>
+              <% } else { %><span class="badge badge-draft">Draft</span><% } %>
+            </td>
+            <td class="actions">
+              <a class="btn btn-secondary" href="/admin/articles/<%= a.id %>/edit">Edit</a>
+              <form method="POST" action="/admin/articles/<%= a.id %>/delete" onsubmit="return confirm('Delete this permanently?');">
+                <button class="btn btn-danger" type="submit">Delete</button>
+              </form>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+    <% } %>
+  </div>
+</div>
+</body>
+</html>
